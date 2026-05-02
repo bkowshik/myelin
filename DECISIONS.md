@@ -89,6 +89,8 @@ Bound once on `document` with a `window.__myelinKeysBound` guard so view transit
 
 Per spec. `/` and `/e/<latest-date>` both render the same entry. No canonical link added; can be added later if SEO becomes a concern.
 
+A small inline script on `/` calls `history.replaceState` to rewrite the address bar to `/e/<latest-date>` after load, so visitors who copy the URL get a dated permalink rather than a bare root that will point at a different entry tomorrow. The server still renders the clean root — this is purely a client-side address-bar tweak, and degrades to the original clean-root URL when JS is disabled.
+
 ## Vercel adapter included even though output is static
 
 The spec asked for it. Static output doesn't strictly need an adapter, but having `@astrojs/vercel` lets Vercel pick up image-optimisation hints and headers configuration if/when needed.

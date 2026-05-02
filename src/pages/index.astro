@@ -23,3 +23,11 @@ const newer = null; // nothing newer than the latest
 <Base title="myelin" description={latest.data.alt}>
   <EntryView entry={latest} older={older} newer={newer} />
 </Base>
+
+<script is:inline define:vars={{ latestId: latest.id }}>
+  // Rewrite `/` to `/e/<latest-date>` in the address bar so the URL is
+  // shareable as a dated permalink. Server still renders the clean root.
+  if (location.pathname === '/') {
+    history.replaceState(history.state, '', `/e/${latestId}`);
+  }
+</script>
