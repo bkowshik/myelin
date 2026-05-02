@@ -12,11 +12,11 @@ If you'd rather split them, change the frontmatter path to `../../assets/entries
 
 ## Starter alt text
 
-I peeked at `~/Downloads/2026-05-02.png` to write a real description rather than a placeholder. Current alt:
+I peeked at `~/Downloads/2026-05-01.png` to write a real description rather than a placeholder. Current alt:
 
 > A dusk landscape where rolling green hills form the profile of a sleeping face, with luminous golden filaments arcing overhead like neural pathways. A distant city glows on the horizon.
 
-Tweak to taste in `src/content/entries/2026-05-02.md`.
+Tweak to taste in `src/content/entries/2026-05-01.md`.
 
 ## Caption + date layout
 
@@ -100,6 +100,14 @@ Spec said `src/content/config.ts`, but Astro 6 hard-errors on that path with `Le
 ## Picture vs Image component
 
 Used `<Picture>` from `astro:assets` rather than `<Image>`. `<Image>` accepts a `formats` array but only emits the *last* one; you don't get a real fallback chain. `<Picture>` renders a `<picture>` with one `<source type="image/avif">`, one `<source type="image/webp">`, and an `<img>` fallback — which is what the spec asked for. `transition:name` is passed through and ends up on the `<img>` so the cross-fade animation still works between entries.
+
+## Analytics: PostHog (inline snippet)
+
+Spec said analytics was out of scope; later request reversed that. Wired in via the **inline JS snippet in `Base.astro`**, mirroring the setup in `~/code/bkowshik/br41n-ssvep` so both projects use the same PostHog approach.
+
+Config: EU region (`https://eu.i.posthog.com`), `defaults: '2026-01-30'`, `person_profiles: 'identified_only'`. With those defaults, pageviews are auto-captured on initial load *and* on `history.pushState`, which is what Astro's `<ClientRouter />` uses for view-transition navigation between entries — so no manual `posthog.capture('$pageview')` call is needed.
+
+The project key is hardcoded in the snippet (it's the public ingestion key, safe to ship). Currently shared with the br41n-ssvep project; create a separate PostHog project if you want clean per-site analytics. The `posthog-js` npm package is *not* installed — the snippet stub is enough.
 
 ## Vite version override
 

@@ -1,20 +1,20 @@
 # myelin
 
-A dated image. A visual record of an idea I keep returning to.
+a dated image. a visual record of an idea i keep returning to.
 
-By Bhargav Kowshik.
+by bhargav kowshik.
 
-## Why "myelin"
+## why "myelin"
 
-Myelin is the sheath that wraps around neural pathways. It builds up through repeated use — the more a signal fires along a track, the more myelin forms, and the clearer and faster that signal becomes. The name is the project: an idea getting clearer through return.
+myelin is the sheath that wraps around neural pathways. it builds up through repeated use — the more a signal fires along a track, the more myelin forms, and the clearer and faster that signal becomes. the name is the project: an idea getting clearer through return.
 
-## Stack
+## stack
 
-- [Astro](https://astro.build) with Content Collections
-- Tailwind CSS
-- Hosted on Vercel
+- [astro](https://astro.build) with content collections
+- tailwind css
+- hosted on vercel
 
-## Local development
+## local development
 
 ```bash
 npm install
@@ -23,4 +23,4 @@ npm run dev
 
 ---
 
-Personal project. Not accepting contributions.
+personal project. not accepting contributions.
