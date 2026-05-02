@@ -20,6 +20,11 @@ import Base from '../layouts/Base.astro';
         name is the project: an idea getting clearer through return.
       </p>
 
+      <p class="hint">
+        use the <kbd>&larr;</kbd> and <kbd>&rarr;</kbd> arrow keys to move
+        between entries.
+      </p>
+
       <p class="byline">by bhargav kowshik</p>
 
       <p class="back">
@@ -56,6 +61,19 @@ import Base from '../layouts/Base.astro';
 
   p {
     margin: 0 0 1.25rem;
+  }
+
+  .hint {
+    color: var(--muted);
+    font-size: 1.09375rem;
+    margin-top: 2rem;
+  }
+
+  .hint kbd {
+    font-family: inherit;
+    font-style: normal;
+    color: var(--fg);
+    padding: 0 0.15em;
   }
 
   .byline {
