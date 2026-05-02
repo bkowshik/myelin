@@ -1,0 +1,39 @@
+---
+// Per-entry permalink at /e/YYYY-MM-DD.
+// Pre-renders one HTML page per entry. The route param matches the entry id
+// (filename without extension) so links from Chrome.astro point here directly.
+import { getCollection, type CollectionEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import EntryView from '../../components/EntryView.astro';
+
+export async function getStaticPaths() {
+  const all = (await getCollection('entries')).sort(
+    (a: CollectionEntry<'entries'>, b: CollectionEntry<'entries'>) =>
+      b.data.date.getTime() - a.data.date.getTime(),
+  );
+
+  // Index 0 is newest; older entries follow. From any index `i`:
+  //   newer = all[i - 1]   (undefined when i === 0)
+  //   older = all[i + 1]   (undefined when last)
+  return all.map((entry, i) => ({
+    params: { date: entry.id },
+    props: {
+      entry,
+      newer: all[i - 1] ?? null,
+      older: all[i + 1] ?? null,
+    },
+  }));
+}
+
+interface Props {
+  entry: CollectionEntry<'entries'>;
+  older: CollectionEntry<'entries'> | null;
+  newer: CollectionEntry<'entries'> | null;
+}
+
+const { entry, older, newer } = Astro.props as Props;
+---
+
+<Base title={`myelin — ${entry.id}`} description={entry.data.alt}>
+  <EntryView entry={entry} older={older} newer={newer} />
+</Base>

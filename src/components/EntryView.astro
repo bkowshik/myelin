@@ -1,0 +1,96 @@
+---
+// Renders a single entry full-bleed-focused.
+//
+// The image is sized to fit comfortably within ~85% of each viewport
+// dimension, never touching the edges. Astro's <Image> handles AVIF/WebP
+// fallbacks and srcset; loading is eager because the image *is* the page.
+import { Picture } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import Chrome from './Chrome.astro';
+
+interface Props {
+  entry: CollectionEntry<'entries'>;
+  older: CollectionEntry<'entries'> | null;
+  newer: CollectionEntry<'entries'> | null;
+}
+
+const { entry, older, newer } = Astro.props;
+
+// Lowercase to match the site's overall lowercase tone (chrome, links, titles).
+const dateLabel = entry.data.date
+  .toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    timeZone: 'UTC',
+  })
+  .toLowerCase();
+---
+
+<main class="entry">
+  <Picture
+    src={entry.data.image}
+    alt={entry.data.alt}
+    loading="eager"
+    fetchpriority="high"
+    decoding="sync"
+    widths={[640, 960, 1280, 1920, 2560]}
+    sizes="(min-width: 1280px) 85vw, 95vw"
+    formats={['avif', 'webp']}
+    fallbackFormat="webp"
+    transition:name="entry-image"
+    pictureAttributes={{ class: 'entry-picture' }}
+    class="entry-image"
+  />
+</main>
+
+<Chrome
+  dateLabel={dateLabel}
+  caption={entry.data.caption}
+  older={older ? { id: older.id } : null}
+  newer={newer ? { id: newer.id } : null}
+/>
+
+<style>
+  /*
+   * Layout reserves a band at the top (about link) and another at the bottom
+   * (caption) by capping the image height at viewport - chrome reservation.
+   * Without this the image hugs 85dvh and the bottom-fixed caption overlaps
+   * its lower edge on short viewports.
+   *
+   * `--chrome-band` scales from ~6.5rem on small screens to ~9rem on large
+   * ones — enough headroom for the bumped chrome typography to sit clear of
+   * the image with breathing room.
+   */
+  .entry {
+    --chrome-band: clamp(6.5rem, 14vmin, 9rem);
+    display: grid;
+    place-items: center;
+    width: 100vw;
+    min-height: 100dvh;
+    padding: clamp(1.5rem, 5vmin, 4rem);
+  }
+
+  .entry-picture {
+    display: block;
+    max-width: min(85vw, 100%);
+    max-height: calc(100dvh - var(--chrome-band));
+  }
+
+  .entry-image {
+    display: block;
+    max-width: 100%;
+    max-height: calc(100dvh - var(--chrome-band));
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    /* gentle shadow so the image lifts off the warm background */
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.05), 0 8px 32px rgb(0 0 0 / 0.08);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .entry-image {
+      box-shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 12px 48px rgb(0 0 0 / 0.5);
+    }
+  }
+</style>

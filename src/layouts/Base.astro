@@ -1,0 +1,61 @@
+---
+// Base HTML shell used by every page.
+//
+// Sets up:
+//  - global stylesheet (Tailwind v4 + tokens)
+//  - serif font via Astro Fonts API (no manual <link> tags)
+//  - Astro view transitions for cross-fade navigation between entries
+//  - persistent keyboard listener for prev/next (lives on document so it
+//    survives view transitions without rebinding on every page load)
+import { Font } from 'astro:assets';
+import { ClientRouter } from 'astro:transitions';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title = 'myelin', description = 'A dated image. A visual record of an idea I keep returning to.' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+
+    <Font cssVariable="--font-serif" preload />
+
+    <ClientRouter />
+  </head>
+  <body>
+    <slot />
+
+    <script is:inline>
+      // Keyboard navigation: ← older, → newer.
+      // Bound once at the document level so view transitions don't double-bind.
+      if (!window.__myelinKeysBound) {
+        window.__myelinKeysBound = true;
+        document.addEventListener('keydown', (e) => {
+          if (e.metaKey || e.ctrlKey || e.altKey) return;
+          if (e.target instanceof HTMLElement) {
+            const tag = e.target.tagName;
+            if (tag === 'INPUT' || tag === 'TEXTAREA' || e.target.isContentEditable) return;
+          }
+          if (e.key === 'ArrowLeft') {
+            const el = document.querySelector('[data-nav="older"]');
+            if (el instanceof HTMLAnchorElement) el.click();
+          } else if (e.key === 'ArrowRight') {
+            const el = document.querySelector('[data-nav="newer"]');
+            if (el instanceof HTMLAnchorElement) el.click();
+          }
+        });
+      }
+    </script>
+  </body>
+</html>

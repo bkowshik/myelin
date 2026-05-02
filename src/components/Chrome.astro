@@ -1,0 +1,176 @@
+---
+// Whisper-small chrome that sits over the entry image:
+//   - date label + optional caption (bottom-center, like a museum caption,
+//     horizontally aligned with the centered image)
+//   - prev/older arrow (left edge)
+//   - next/newer arrow (right edge)
+//   - "about" word (top-right)
+//
+// Arrows are real <a> tags with data-astro-prefetch so adjacent images warm
+// in the cache before the click. When there is no neighbour the arrow is
+// rendered as a non-interactive span so layout stays identical.
+interface NavTarget {
+  id: string;
+}
+
+interface Props {
+  dateLabel: string;
+  caption?: string;
+  older: NavTarget | null;
+  newer: NavTarget | null;
+}
+
+const { dateLabel, caption, older, newer } = Astro.props;
+---
+
+<div class="chrome">
+  <div class="meta">
+    {caption && <span class="caption">{caption}</span>}
+    <time class="date">{dateLabel}</time>
+  </div>
+
+  {
+    older ? (
+      <a
+        href={`/e/${older.id}`}
+        class="nav nav-older"
+        data-nav="older"
+        data-astro-prefetch
+        aria-label="Older entry"
+      >
+        <span aria-hidden="true">&larr;</span>
+      </a>
+    ) : (
+      <span class="nav nav-older disabled" aria-hidden="true">&larr;</span>
+    )
+  }
+
+  {
+    newer ? (
+      <a
+        href={`/e/${newer.id}`}
+        class="nav nav-newer"
+        data-nav="newer"
+        data-astro-prefetch
+        aria-label="Newer entry"
+      >
+        <span aria-hidden="true">&rarr;</span>
+      </a>
+    ) : (
+      <span class="nav nav-newer disabled" aria-hidden="true">&rarr;</span>
+    )
+  }
+
+  <a href="/about" class="about-link">about</a>
+</div>
+
+<style>
+  .chrome {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  .chrome > * {
+    pointer-events: auto;
+  }
+
+  .meta {
+    position: fixed;
+    bottom: clamp(1rem, 3vmin, 1.75rem);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    line-height: 1.3;
+    white-space: nowrap;
+  }
+
+  /* caption leads — it's the actual content of the entry */
+  .caption {
+    color: var(--fg);
+    font-size: 1.171875rem;
+    letter-spacing: 0.005em;
+  }
+
+  /* date is the quiet timestamp — italic, smaller, muted */
+  .date {
+    color: var(--muted);
+    font-size: 0.9375rem;
+    font-style: italic;
+    letter-spacing: 0.02em;
+    opacity: 0.85;
+  }
+
+  /* thin separator before the date when a caption precedes it */
+  .caption + .date::before {
+    content: "·";
+    margin-right: 0.5rem;
+    opacity: 0.6;
+  }
+
+  .nav {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    color: var(--muted);
+    font-size: 1.25rem;
+    opacity: 0.35;
+    transition: opacity 200ms ease;
+    user-select: none;
+  }
+
+  .nav-older {
+    left: clamp(0.5rem, 2vmin, 1.5rem);
+  }
+
+  .nav-newer {
+    right: clamp(0.5rem, 2vmin, 1.5rem);
+  }
+
+  .nav:hover,
+  .nav:focus-visible {
+    opacity: 1;
+    color: var(--accent);
+    outline: none;
+  }
+
+  .nav.disabled {
+    opacity: 0.1;
+    pointer-events: none;
+  }
+
+  /* Same color, size, and letter-spacing as the caption so the two
+     read as one consistent voice on the page. */
+  .about-link,
+  .about-link:visited {
+    position: fixed;
+    top: clamp(1rem, 3vmin, 1.75rem);
+    right: clamp(1rem, 3vmin, 1.75rem);
+    color: var(--fg);
+    font-size: 1.171875rem;
+    letter-spacing: 0.005em;
+    transition: color 200ms ease;
+  }
+
+  .about-link:hover,
+  .about-link:focus-visible {
+    opacity: 1;
+    color: var(--accent);
+    outline: none;
+  }
+
+  @media (max-width: 480px) {
+    .nav {
+      width: 2rem;
+      height: 2rem;
+      font-size: 1rem;
+    }
+  }
+</style>

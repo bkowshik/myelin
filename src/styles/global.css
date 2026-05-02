@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+/*
+ * Palette
+ * Light: warm off-white, deep ink text, muted clay accent.
+ * Dark : deep blue-black (matches dusk imagery), pale ivory text.
+ * Tailwind v4 picks up `prefers-color-scheme` automatically; we expose
+ * the same tokens through CSS variables so plain CSS rules can use them too.
+ */
+:root {
+  --bg: #f3ede2;
+  --fg: #1a1814;
+  --muted: #8a857a;
+  --accent: #a87c5a;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0c1018;
+    --fg: #e8e4da;
+    --muted: #6a7180;
+    --accent: #c89a78;
+  }
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-serif), Georgia, "Times New Roman", serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--bg);
+}

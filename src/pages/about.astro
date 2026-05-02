@@ -1,0 +1,78 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="myelin — about" description="About myelin, a dated image series by Bhargav Kowshik.">
+  <main class="about">
+    <article>
+      <h1>myelin</h1>
+
+      <p>
+        a dated image. a visual record of an idea i keep returning to. new entries
+        appear when there is something to add &mdash; no fixed cadence, no archive,
+        no feed. one image at a time.
+      </p>
+
+      <p>
+        myelin is the sheath that wraps around neural pathways. it builds up
+        through repeated use &mdash; the more a signal fires along a track, the
+        more myelin forms, and the clearer and faster that signal becomes. the
+        name is the project: an idea getting clearer through return.
+      </p>
+
+      <p class="byline">by bhargav kowshik</p>
+
+      <p class="back">
+        <a href="/">&larr; latest</a>
+      </p>
+    </article>
+  </main>
+</Base>
+
+<style>
+  .about {
+    display: grid;
+    place-items: center;
+    min-height: 100dvh;
+    padding: clamp(2rem, 6vmin, 5rem) 1.25rem;
+  }
+
+  article {
+    max-width: 38rem; /* ~620px */
+    width: 100%;
+    color: var(--fg);
+    font-size: 1.328125rem;
+    line-height: 1.65;
+  }
+
+  h1 {
+    font-size: 1.5625rem;
+    font-weight: 500;
+    font-style: italic;
+    color: var(--muted);
+    margin: 0 0 2rem;
+    letter-spacing: 0.01em;
+  }
+
+  p {
+    margin: 0 0 1.25rem;
+  }
+
+  .byline {
+    color: var(--muted);
+    font-style: italic;
+    margin-top: 2rem;
+  }
+
+  .back {
+    margin-top: 3rem;
+    font-size: 1.09375rem;
+    color: var(--muted);
+  }
+
+  .back a:hover,
+  .back a:focus-visible {
+    color: var(--accent);
+    outline: none;
+  }
+</style>

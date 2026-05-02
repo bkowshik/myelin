@@ -1,0 +1,25 @@
+---
+// Homepage — renders the latest entry inline at `/`.
+// We intentionally do not redirect to `/e/<latest-date>`; the spec calls
+// for a clean root URL.
+import { getCollection, type CollectionEntry } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import EntryView from '../components/EntryView.astro';
+
+const all = (await getCollection('entries')).sort(
+  (a: CollectionEntry<'entries'>, b: CollectionEntry<'entries'>) =>
+    b.data.date.getTime() - a.data.date.getTime(),
+);
+
+if (all.length === 0) {
+  throw new Error('No entries found in src/content/entries/. Add at least one entry to build the site.');
+}
+
+const latest = all[0];
+const older = all[1] ?? null; // older entry, if any
+const newer = null; // nothing newer than the latest
+---
+
+<Base title="myelin" description={latest.data.alt}>
+  <EntryView entry={latest} older={older} newer={newer} />
+</Base>
